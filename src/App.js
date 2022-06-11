@@ -35,6 +35,8 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 
 import Buildings from './buildings/Buildings.js';
+
+import App from './components/diagrams/App.js';
 // import Scheduler from './scheduler/Scheduler.js';
 // import Checker from './checker/Checker.js';
 // import Contact from './contact/Contact.js';
@@ -110,7 +112,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Buildings />} />
-          <Route path="/scheduler" element={<Scheduler />} />
+          <Route path="/diagrams" element={<App />} />
           {/*<Route path="/checker" element={<Checker />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/siteMaps" element={<SiteMaps />} />
@@ -132,6 +134,11 @@ function Layout() {
     {
       to: '/',
       name: 'Buildings',
+      icon: <HomeIcon />,
+    },
+    {
+      to: '/diagrams',
+      name: 'Diagrams',
       icon: <HomeIcon />,
     },
   ];
