@@ -1,8 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import { Palette } from "./Palette";
-import { Canvas } from "./Canvas";
-import { PropertiesPanel } from "./PropertiesPanel";
+import { Palette } from './Palette';
+import { Canvas } from './Canvas';
+import { PropertiesPanel } from './PropertiesPanel';
+
+import './index.css';
 
 function App() {
   return (
