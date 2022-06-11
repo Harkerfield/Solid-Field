@@ -110,8 +110,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Buildings />} />
-          {/* <Route path="/scheduler" element={<Scheduler />} />
-          <Route path="/checker" element={<Checker />} />
+          <Route path="/scheduler" element={<Scheduler />} />
+          {/*<Route path="/checker" element={<Checker />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/siteMaps" element={<SiteMaps />} />
           <Route path="/contact" element={<Contact />} />
