@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { Canvas, useFrame } from 'react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const Box = (props) => {
@@ -24,7 +24,7 @@ const Box = (props) => {
       onClick={(e) => setActive(!active)}
     >
       <boxBufferGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial attach="material" transparent side={THREE.DoubleSide}>
+      <meshBasicMaterial attach="material" transparent >
         {/* <primitive attach="map"  /> */}
       </meshBasicMaterial>
     </mesh>
