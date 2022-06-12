@@ -1,6 +1,7 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame } from 'react-three-fiber';
 import * as THREE from 'three';
+import './ThreeApp.css';
 
 const Box = (props) => {
   // This reference will give us direct access to the mesh
@@ -10,11 +11,22 @@ const Box = (props) => {
   const [active, setActive] = useState(false);
 
   // Rotate mesh every frame, this is outside of React without overhead
-  // useFrame(() => {
-  //   // mesh.current.rotation.x = mesh.current.rotation.y += .0009;
-  // });
+  useFrame(() => {
+    mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
+  });
 
-  // const texture = useMemo(() => new THREE.TextureLoader().load(five), []);
+
+
+
+  cubeGeo = new THREE.BoxGeometry(50, 50, 50);
+  cubeMaterial = new THREE.MeshLambertMaterial({
+    color: 0xfeb74c,
+    map: new THREE.TextureLoader().load('textures/square-outline-textured.png'),
+  });
+
+
+
+  
 
   return (
     <mesh
@@ -24,8 +36,8 @@ const Box = (props) => {
       onClick={(e) => setActive(!active)}
     >
       <boxBufferGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial attach="material" transparent >
-        {/* <primitive attach="map"  /> */}
+      <meshBasicMaterial attach="material" transparent side={THREE.DoubleSide}>
+        <primitive attach="map" object={texture} />
       </meshBasicMaterial>
     </mesh>
   );
