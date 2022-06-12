@@ -3,6 +3,8 @@ import { Canvas, useFrame } from 'react-three-fiber';
 import * as THREE from 'three';
 import './ThreeApp.css';
 
+import Square from './square-outline-textured.png';
+
 let camera, scene, renderer;
 let plane;
 let pointer, raycaster, isShiftDown = false;
@@ -34,7 +36,7 @@ function init() {
   // cubes
 
   cubeGeo = new THREE.BoxGeometry( 50, 50, 50 );
-  cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xfeb74c, map: new THREE.TextureLoader().load( 'textures/square-outline-textured.png' ) } );
+  cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xfeb74c, map: new THREE.TextureLoader().load( './square-outline-textured.png' ) } );
 
   // grid
 
