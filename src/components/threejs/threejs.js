@@ -2,8 +2,8 @@ import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from 'react-three-fiber';
 import * as THREE from 'three';
 import './ThreeApp.css';
-
-import Square from './square-outline-textured.png';
+import { OrbitControls } from './orbitalcontrols.js';
+//import { Square } from './square-outline-textured.png';
 
 let camera, scene, renderer;
 let plane;
@@ -19,8 +19,12 @@ render();
 
 function init() {
 
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.set( 500, 800, 1300 );
+  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000000 );
+
+
+  const controls = new OrbitControls ( camera, renderer.domElement );
+  
+  camera.position.set( 450, 1000, 1500 );
   camera.lookAt( 0, 0, 0 );
 
   scene = new THREE.Scene();
@@ -183,5 +187,5 @@ function render() {
 }
 
 export default function ThreeApp (){
-  return (<div></div>)
+  return (<div><scene/></div>)
 }
