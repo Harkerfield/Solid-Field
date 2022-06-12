@@ -36,7 +36,12 @@ import ArchitectureIcon from '@mui/icons-material/Architecture';
 
 import Buildings from './buildings/Buildings.js';
 
-import App from './components/diagrams/App.js';
+import DiagramApp from './components/diagrams/App.js';
+
+
+import ThreeApp from './components/threejs/threejs.js';
+
+
 // import Scheduler from './scheduler/Scheduler.js';
 // import Checker from './checker/Checker.js';
 // import Contact from './contact/Contact.js';
@@ -112,7 +117,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Buildings />} />
-          <Route path="/diagrams" element={<App />} />
+          <Route path="/diagrams" element={<DiagramApp />} />
+          
+          <Route path="/ThreeApp" element={<ThreeApp />} />
+          
           {/*<Route path="/checker" element={<Checker />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/siteMaps" element={<SiteMaps />} />
@@ -139,6 +147,11 @@ function Layout() {
     {
       to: '/diagrams',
       name: 'Diagrams',
+      icon: <HomeIcon />,
+    },
+    {
+      to: '/ThreeApp',
+      name: 'ThreeApp',
       icon: <HomeIcon />,
     },
   ];

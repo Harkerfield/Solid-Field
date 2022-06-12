@@ -6,7 +6,7 @@ import { PropertiesPanel } from './PropertiesPanel';
 
 import './index.css';
 
-function App() {
+function DiagramApp() {
   return (
     <div className="app">
       <Palette />
@@ -16,4 +16,4 @@ function App() {
   );
 }
 
-export default App;
+export default DiagramApp;
