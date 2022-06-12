@@ -1,33 +1,49 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import React, { useRef, useState, useMemo } from "react";
+import { Canvas, useFrame } from "react-three-fiber";
 import * as THREE from "three";
-class ThreeApp extends Component {
-  componentDidMount() {
-    // === THREE.JS CODE START ===
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    var cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
-    camera.position.z = 5;
-    var animate = function () {
-      requestAnimationFrame( animate );
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-      renderer.render( scene, camera );
-    };
-    animate();
-    // === THREE.JS EXAMPLE CODE END ===
-  }
-  render() {
-    return (
-      <div />
-    )
-  }
+import './App.css'
+
+import five from "./assets/five.png";
+
+const Box = (props) => {
+  // This reference will give us direct access to the mesh
+  const mesh = useRef();
+
+  // Set up state for the hovered and active state 
+  const [active, setActive] = useState(false);
+
+  // Rotate mesh every frame, this is outside of React without overhead
+  useFrame(() => {
+    mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
+  });
+  
+  const texture = useMemo(() => new THREE.TextureLoader().load(five), []);
+  
+  return (
+    <mesh
+    {...props}
+    ref={mesh}
+    scale={active ? [2, 2, 2] : [1.5, 1.5, 1.5]}
+    onClick={(e) => setActive(!active)}
+      >
+      <boxBufferGeometry args={[1, 1, 1]} />
+      <meshBasicMaterial attach="material" transparent side={THREE.DoubleSide}>
+        <primitive attach="map" object={texture} />
+      </meshBasicMaterial>
+    </mesh>
+  );
 }
-const rootElement = document.getElementById("root");
-ReactDOM.render(<ThreeApp />, rootElement);
+
+const App = () => {
+  return (
+    <Canvas>
+      <ambientLight intensity={0.5} />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+      <pointLight position={[-10, -10, -10]} />
+      <Box position={[-1.2, 0, 0]} />
+      <Box position={[2.5, 0, 0]} />
+    </Canvas>
+  );
+}
+
+export default App;
