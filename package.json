@@ -18,7 +18,9 @@
     "react-dom": "18.1.0",
     "react-konva": "18.1.1",
     "react-router-dom": "6.3.0",
-    "three": "^0.141.0"
+    "react-three": "^0.9.7",
+    "react-three-fiber": "6.0.13",
+    "three": "0.141.0"
   },
   "scripts": {
     "start": "react-scripts start",
