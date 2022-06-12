@@ -3,56 +3,183 @@ import { Canvas, useFrame } from 'react-three-fiber';
 import * as THREE from 'three';
 import './ThreeApp.css';
 
-const Box = (props) => {
-  // This reference will give us direct access to the mesh
-  const mesh = useRef();
+let camera, scene, renderer;
+let plane;
+let pointer, raycaster, isShiftDown = false;
 
-  // Set up state for the hovered and active state
-  const [active, setActive] = useState(false);
+let rollOverMesh, rollOverMaterial;
+let cubeGeo, cubeMaterial;
 
-  // Rotate mesh every frame, this is outside of React without overhead
-  useFrame(() => {
-    mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
-  });
+const objects = [];
 
+init();
+render();
 
+function init() {
 
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera.position.set( 500, 800, 1300 );
+  camera.lookAt( 0, 0, 0 );
 
-  cubeGeo = new THREE.BoxGeometry(50, 50, 50);
-  cubeMaterial = new THREE.MeshLambertMaterial({
-    color: 0xfeb74c,
-    map: new THREE.TextureLoader().load('textures/square-outline-textured.png'),
-  });
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color( 0xf0f0f0 );
 
+  // roll-over helpers
 
+  const rollOverGeo = new THREE.BoxGeometry( 50, 50, 50 );
+  rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+  rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
+  scene.add( rollOverMesh );
 
-  
+  // cubes
 
-  return (
-    <mesh
-      {...props}
-      ref={mesh}
-      scale={active ? [2, 2, 2] : [1.5, 1.5, 1.5]}
-      onClick={(e) => setActive(!active)}
-    >
-      <boxBufferGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial attach="material" transparent side={THREE.DoubleSide}>
-        <primitive attach="map" object={texture} />
-      </meshBasicMaterial>
-    </mesh>
-  );
-};
+  cubeGeo = new THREE.BoxGeometry( 50, 50, 50 );
+  cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xfeb74c, map: new THREE.TextureLoader().load( 'textures/square-outline-textured.png' ) } );
 
-const ThreeApp = () => {
-  return (
-    <Canvas>
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-      <pointLight position={[-10, -10, -10]} />
-      <Box position={[-1.2, 0, 0]} />
-      <Box position={[2.5, 0, 0]} />
-    </Canvas>
-  );
-};
+  // grid
 
-export default ThreeApp;
+  const gridHelper = new THREE.GridHelper( 1000, 20 );
+  scene.add( gridHelper );
+
+  //
+
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+
+  const geometry = new THREE.PlaneGeometry( 1000, 1000 );
+  geometry.rotateX( - Math.PI / 2 );
+
+  plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
+  scene.add( plane );
+
+  objects.push( plane );
+
+  // lights
+
+  const ambientLight = new THREE.AmbientLight( 0x606060 );
+  scene.add( ambientLight );
+
+  const directionalLight = new THREE.DirectionalLight( 0xffffff );
+  directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
+  scene.add( directionalLight );
+
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  document.body.appendChild( renderer.domElement );
+
+  document.addEventListener( 'pointermove', onPointerMove );
+  document.addEventListener( 'pointerdown', onPointerDown );
+  document.addEventListener( 'keydown', onDocumentKeyDown );
+  document.addEventListener( 'keyup', onDocumentKeyUp );
+
+  //
+
+  window.addEventListener( 'resize', onWindowResize );
+
+}
+
+function onWindowResize() {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+  render();
+
+}
+
+function onPointerMove( event ) {
+
+  pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+  raycaster.setFromCamera( pointer, camera );
+
+  const intersects = raycaster.intersectObjects( objects, false );
+
+  if ( intersects.length > 0 ) {
+
+    const intersect = intersects[ 0 ];
+
+    rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+    rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+
+    render();
+
+  }
+
+}
+
+function onPointerDown( event ) {
+
+  pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+  raycaster.setFromCamera( pointer, camera );
+
+  const intersects = raycaster.intersectObjects( objects, false );
+
+  if ( intersects.length > 0 ) {
+
+    const intersect = intersects[ 0 ];
+
+    // delete cube
+
+    if ( isShiftDown ) {
+
+      if ( intersect.object !== plane ) {
+
+        scene.remove( intersect.object );
+
+        objects.splice( objects.indexOf( intersect.object ), 1 );
+
+      }
+
+      // create cube
+
+    } else {
+
+      const voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
+      voxel.position.copy( intersect.point ).add( intersect.face.normal );
+      voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+      scene.add( voxel );
+
+      objects.push( voxel );
+
+    }
+
+    render();
+
+  }
+
+}
+
+function onDocumentKeyDown( event ) {
+
+  switch ( event.keyCode ) {
+
+    case 16: isShiftDown = true; break;
+
+  }
+
+}
+
+function onDocumentKeyUp( event ) {
+
+  switch ( event.keyCode ) {
+
+    case 16: isShiftDown = false; break;
+
+  }
+
+}
+
+function render() {
+
+  renderer.render( scene, camera );
+
+}
+
+export default function ThreeApp (){
+  return (<div></div>)
+}
