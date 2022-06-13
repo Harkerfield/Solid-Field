@@ -87,7 +87,7 @@ const Dinosaur = () => {
       controls.autoRotate = true;
       controls.target = target;
 
-      loadGLTFModel(scene, './Dinosaur.glb', {
+      loadGLTFModel(scene, Dino, {
         receiveShadow: false,
         castShadow: false,
       }).then(() => {
