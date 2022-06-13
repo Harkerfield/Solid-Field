@@ -1,7 +1,7 @@
 // https://github.com/mrdoob/three.js/tree/master/examples/jsm
 
-import { useState, useEffect, useRef, React } from 'react';
-
+import { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -32,7 +32,7 @@ function loadGLTFModel(scene, glbPath, options) {
       },
       undefined,
       function (error) {
-        console.log(error);
+        console.log("error recieved", error);
         reject(error);
       }
     );
@@ -85,7 +85,7 @@ const Dinosaur = () => {
       controls.autoRotate = true;
       controls.target = target;
 
-      loadGLTFModel(scene, './Dinosaur.glb', {
+      loadGLTFModel(scene, '/Dinosaur.glb', {
         receiveShadow: false,
         castShadow: false,
       }).then(() => {
@@ -141,7 +141,7 @@ export default function ThreeApp() {
   return (
     <div style={{ width: '100%', margin: '0 auto' }}>
       <p>Click and hold to move around</p>
-      <p></p>
+
       <Dinosaur />
     </div>
   );
