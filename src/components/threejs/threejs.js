@@ -5,41 +5,40 @@ import React from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import Dino from './Dinosaur.glb';
+//import Dino from './Dinosaur.glb';
 
+// function loadGLTFModel(scene, glbPath, options) {
+//   const { receiveShadow, castShadow } = options;
+//   return new Promise((resolve, reject) => {
+//     const loader = new GLTFLoader();
+//     loader.load(
+//       glbPath,
+//       (gltf) => {
+//         const obj = gltf.scene;
+//         obj.name = 'dinosaur';
+//         obj.position.y = 0;
+//         obj.position.x = 0;
+//         obj.receiveShadow = receiveShadow;
+//         obj.castShadow = castShadow;
+//         scene.add(obj);
 
-function loadGLTFModel(scene, glbPath, options) {
-  const { receiveShadow, castShadow } = options;
-  return new Promise((resolve, reject) => {
-    const loader = new GLTFLoader();
-    loader.load(
-      glbPath,
-      (gltf) => {
-        const obj = gltf.scene;
-        obj.name = 'dinosaur';
-        obj.position.y = 0;
-        obj.position.x = 0;
-        obj.receiveShadow = receiveShadow;
-        obj.castShadow = castShadow;
-        scene.add(obj);
+//         obj.traverse(function (child) {
+//           if (child.isMesh) {
+//             child.castShadow = castShadow;
+//             child.receiveShadow = receiveShadow;
+//           }
+//         });
 
-        obj.traverse(function (child) {
-          if (child.isMesh) {
-            child.castShadow = castShadow;
-            child.receiveShadow = receiveShadow;
-          }
-        });
-
-        resolve(obj);
-      },
-      undefined,
-      function (error) {
-        console.log("error recieved", error);
-        reject(error);
-      }
-    );
-  });
-}
+//         resolve(obj);
+//       },
+//       undefined,
+//       function (error) {
+//         console.log("error recieved", error);
+//         reject(error);
+//       }
+//     );
+//   });
+// }
 
 function easeOutCirc(x) {
   return Math.sqrt(1 - Math.pow(x - 1, 4));
@@ -87,13 +86,16 @@ const Dinosaur = () => {
       controls.autoRotate = true;
       controls.target = target;
 
-      loadGLTFModel(scene, Dino, {
-        receiveShadow: false,
-        castShadow: false,
-      }).then(() => {
-        animate();
-        setLoading(false);
-      });
+      // loadGLTFModel(scene, Dino, {
+      //   receiveShadow: false,
+      //   castShadow: false,
+      // }).then(() => {
+      //   animate();
+      //   setLoading(false);
+      // });
+
+      cubeGeo = new THREE.BoxGeometry(50, 50, 50);
+      cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xfeb74c });
 
       let req = null;
       let frame = 0;
