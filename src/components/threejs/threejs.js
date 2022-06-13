@@ -1,191 +1,153 @@
-import React, { useRef, useState, useMemo } from 'react';
-import { Canvas, useFrame } from 'react-three-fiber';
-import * as THREE from 'three';
-import './ThreeApp.css';
-import { OrbitControls } from './orbitalcontrols.js';
-//import { Square } from './square-outline-textured.png';
-
-let camera, scene, renderer;
-let plane;
-let pointer, raycaster, isShiftDown = false;
-
-let rollOverMesh, rollOverMaterial;
-let cubeGeo, cubeMaterial;
-
-const objects = [];
-
-init();
-render();
-
-function init() {
-
-  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000000 );
+// https://github.com/mrdoob/three.js/tree/master/examples/jsm
 
 
-  const controls = new OrbitControls ( camera, renderer.domElement );
-  
-  camera.position.set( 450, 1000, 1500 );
-  camera.lookAt( 0, 0, 0 );
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color( 0xf0f0f0 );
+import { useState, useEffect, useRef, React } from "react";
 
-  // roll-over helpers
 
-  const rollOverGeo = new THREE.BoxGeometry( 50, 50, 50 );
-  rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
-  rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
-  scene.add( rollOverMesh );
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-  // cubes
+function loadGLTFModel(scene, glbPath, options) {
+  const { receiveShadow, castShadow } = options;
+  return new Promise((resolve, reject) => {
+    const loader = new GLTFLoader();
+    loader.load(
+      glbPath,
+      (gltf) => {
+        const obj = gltf.scene;
+        obj.name = "dinosaur";
+        obj.position.y = 0;
+        obj.position.x = 0;
+        obj.receiveShadow = receiveShadow;
+        obj.castShadow = castShadow;
+        scene.add(obj);
 
-  cubeGeo = new THREE.BoxGeometry( 50, 50, 50 );
-  cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xfeb74c, map: new THREE.TextureLoader().load( './square-outline-textured.png' ) } );
+        obj.traverse(function (child) {
+          if (child.isMesh) {
+            child.castShadow = castShadow;
+            child.receiveShadow = receiveShadow;
+          }
+        });
 
-  // grid
-
-  const gridHelper = new THREE.GridHelper( 1000, 20 );
-  scene.add( gridHelper );
-
-  //
-
-  raycaster = new THREE.Raycaster();
-  pointer = new THREE.Vector2();
-
-  const geometry = new THREE.PlaneGeometry( 1000, 1000 );
-  geometry.rotateX( - Math.PI / 2 );
-
-  plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
-  scene.add( plane );
-
-  objects.push( plane );
-
-  // lights
-
-  const ambientLight = new THREE.AmbientLight( 0x606060 );
-  scene.add( ambientLight );
-
-  const directionalLight = new THREE.DirectionalLight( 0xffffff );
-  directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
-  scene.add( directionalLight );
-
-  renderer = new THREE.WebGLRenderer( { antialias: true } );
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  document.body.appendChild( renderer.domElement );
-
-  document.addEventListener( 'pointermove', onPointerMove );
-  document.addEventListener( 'pointerdown', onPointerDown );
-  document.addEventListener( 'keydown', onDocumentKeyDown );
-  document.addEventListener( 'keyup', onDocumentKeyUp );
-
-  //
-
-  window.addEventListener( 'resize', onWindowResize );
-
-}
-
-function onWindowResize() {
-
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize( window.innerWidth, window.innerHeight );
-
-  render();
-
-}
-
-function onPointerMove( event ) {
-
-  pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
-
-  raycaster.setFromCamera( pointer, camera );
-
-  const intersects = raycaster.intersectObjects( objects, false );
-
-  if ( intersects.length > 0 ) {
-
-    const intersect = intersects[ 0 ];
-
-    rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
-    rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-
-    render();
-
-  }
-
-}
-
-function onPointerDown( event ) {
-
-  pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
-
-  raycaster.setFromCamera( pointer, camera );
-
-  const intersects = raycaster.intersectObjects( objects, false );
-
-  if ( intersects.length > 0 ) {
-
-    const intersect = intersects[ 0 ];
-
-    // delete cube
-
-    if ( isShiftDown ) {
-
-      if ( intersect.object !== plane ) {
-
-        scene.remove( intersect.object );
-
-        objects.splice( objects.indexOf( intersect.object ), 1 );
-
+        resolve(obj);
+      },
+      undefined,
+      function (error) {
+        console.log(error);
+        reject(error);
       }
+    );
+  });
+}
 
-      // create cube
+function easeOutCirc(x) {
+  return Math.sqrt(1 - Math.pow(x - 1, 4));
+}
 
-    } else {
+const Dinosaur = () => {
+  const refContainer = useRef();
+  const [loading, setLoading] = useState(true);
+  const [renderer, setRenderer] = useState();
 
-      const voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
-      voxel.position.copy( intersect.point ).add( intersect.face.normal );
-      voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-      scene.add( voxel );
+  useEffect(() => {
+    const { current: container } = refContainer;
+    if (container && !renderer) {
+      const scW = container.clientWidth;
+      const scH = container.clientHeight;
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(scW, scH);
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      container.appendChild(renderer.domElement);
+      setRenderer(renderer);
 
-      objects.push( voxel );
+      const scene = new THREE.Scene();
+      const scale = 5.6;
+      const camera = new THREE.OrthographicCamera(
+        -scale,
+        scale,
+        scale,
+        -scale,
+        0.01,
+        50000
+      );
+      const target = new THREE.Vector3(-0.5, 1.2, 0);
+      const initialCameraPosition = new THREE.Vector3(
+        20 * Math.sin(0.2 * Math.PI),
+        10,
+        20 * Math.cos(0.2 * Math.PI)
+      );
+      const ambientLight = new THREE.AmbientLight(0xcccccc, 1);
+      scene.add(ambientLight);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.autoRotate = true;
+      controls.target = target;
 
+      loadGLTFModel(scene, "/Dinosaur.glb", {
+        receiveShadow: false,
+        castShadow: false
+      }).then(() => {
+        animate();
+        setLoading(false);
+      });
+
+      let req = null;
+      let frame = 0;
+      const animate = () => {
+        req = requestAnimationFrame(animate);
+        frame = frame <= 100 ? frame + 1 : frame;
+
+        if (frame <= 100) {
+          const p = initialCameraPosition;
+          const rotSpeed = -easeOutCirc(frame / 120) * Math.PI * 20;
+
+          camera.position.y = 10;
+          camera.position.x =
+            p.x * Math.cos(rotSpeed) + p.z * Math.sin(rotSpeed);
+          camera.position.z =
+            p.z * Math.cos(rotSpeed) - p.x * Math.sin(rotSpeed);
+          camera.lookAt(target);
+        } else {
+          controls.update();
+        }
+
+        renderer.render(scene, camera);
+      };
+
+      return () => {
+        cancelAnimationFrame(req);
+        renderer.dispose();
+      };
     }
+  }, []);
 
-    render();
+  return (
+    <div
+      style={{ height: "540px", width: "540px", position: "relative" }}
+      ref={refContainer}
+    >
+      {loading && (
+        <span style={{ position: "absolute", left: "50%", top: "50%" }}>
+          Loading...
+        </span>
+      )}
+    </div>
+  );
+};
 
-  }
-
-}
-
-function onDocumentKeyDown( event ) {
-
-  switch ( event.keyCode ) {
-
-    case 16: isShiftDown = true; break;
-
-  }
-
-}
-
-function onDocumentKeyUp( event ) {
-
-  switch ( event.keyCode ) {
-
-    case 16: isShiftDown = false; break;
-
-  }
-
-}
-
-function render() {
-
-  renderer.render( scene, camera );
-
-}
-
-export default function ThreeApp (){
-  return (<div><scene/></div>)
+export default function ThreeApp() {
+  return (
+    <div style={{ width: "100%", margin: "0 auto" }}>
+      <p>Click and hold to move around</p>
+      <p>
+     
+      </p>
+      <Dinosaur />
+    </div>
+  );
 }
