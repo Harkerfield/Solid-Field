@@ -1,13 +1,10 @@
 // https://github.com/mrdoob/three.js/tree/master/examples/jsm
 
+import { useState, useEffect, useRef, React } from 'react';
 
-
-import { useState, useEffect, useRef, React } from "react";
-
-
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 function loadGLTFModel(scene, glbPath, options) {
   const { receiveShadow, castShadow } = options;
@@ -17,7 +14,7 @@ function loadGLTFModel(scene, glbPath, options) {
       glbPath,
       (gltf) => {
         const obj = gltf.scene;
-        obj.name = "dinosaur";
+        obj.name = 'dinosaur';
         obj.position.y = 0;
         obj.position.x = 0;
         obj.receiveShadow = receiveShadow;
@@ -58,7 +55,7 @@ const Dinosaur = () => {
       const scH = container.clientHeight;
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true
+        alpha: true,
       });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(scW, scH);
@@ -88,9 +85,9 @@ const Dinosaur = () => {
       controls.autoRotate = true;
       controls.target = target;
 
-      loadGLTFModel(scene, "/Dinosaur.glb", {
+      loadGLTFModel(scene, '/Dinosaur.glb', {
         receiveShadow: false,
-        castShadow: false
+        castShadow: false,
       }).then(() => {
         animate();
         setLoading(false);
@@ -128,11 +125,11 @@ const Dinosaur = () => {
 
   return (
     <div
-      style={{ height: "540px", width: "540px", position: "relative" }}
+      style={{ height: '540px', width: '540px', position: 'relative' }}
       ref={refContainer}
     >
       {loading && (
-        <span style={{ position: "absolute", left: "50%", top: "50%" }}>
+        <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
           Loading...
         </span>
       )}
@@ -142,11 +139,9 @@ const Dinosaur = () => {
 
 export default function ThreeApp() {
   return (
-    <div style={{ width: "100%", margin: "0 auto" }}>
+    <div style={{ width: '100%', margin: '0 auto' }}>
       <p>Click and hold to move around</p>
-      <p>
-     
-      </p>
+      <p></p>
       <Dinosaur />
     </div>
   );
