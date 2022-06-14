@@ -94,9 +94,7 @@ const Dinosaur = () => {
       //   setLoading(false);
       // });
 
-      cubeGeo = new THREE.BoxGeometry(50, 50, 50);
-      cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xfeb74c });
-
+  
       let req = null;
       let frame = 0;
       const animate = () => {

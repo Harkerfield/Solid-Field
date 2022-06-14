@@ -39,7 +39,7 @@ import Buildings from './buildings/Buildings.js';
 import DiagramApp from './components/diagrams/App.js';
 
 
-import ThreeApp from './components/threejs/threejs.js';
+import ThreeJSON from './components/threeJSTestingJSON/threeJSON.js';
 
 
 // import Scheduler from './scheduler/Scheduler.js';
@@ -119,7 +119,7 @@ export default function App() {
           <Route index element={<Buildings />} />
           <Route path="/diagrams" element={<DiagramApp />} />
           
-          <Route path="/ThreeApp" element={<ThreeApp />} />
+          <Route path="/ThreeApp" element={<ThreeJSON />} />
           
           {/*<Route path="/checker" element={<Checker />} />
           <Route path="/dashboard" element={<Dashboard />} />

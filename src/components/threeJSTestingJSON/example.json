@@ -13,17 +13,17 @@
 					"position": {
 						"itemSize": 3,
 						"type": "Float32Array",
-						"array": [50,50,50,...]
+						"array": [50,50,50]
 					},
 					"normal": {
 						"itemSize": 3,
 						"type": "Float32Array",
-						"array": [1,0,0,...]
+						"array": [1,0,0]
 					},
 					"uv": {
 						"itemSize": 2,
 						"type": "Float32Array",
-						"array": [0,1,...]
+						"array": [0,1]
 					}
 				},
 				"boundingSphere": {
