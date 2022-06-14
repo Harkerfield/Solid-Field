@@ -24,6 +24,24 @@ export default function ThreeJSON(props) {
 
 
 
+
+  camera.position.z = 5;
+
+  function animate() {
+    requestAnimationFrame( animate );
+
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+
+    renderer.render( scene, camera );
+  };
+
+  animate();
+
+
+
+
+
   const loader = new THREE.ObjectLoader();
 
   // loader.load(
@@ -52,8 +70,8 @@ export default function ThreeJSON(props) {
   
 	
 	const object = loader.parse(models);
-  Scene.add(object);
-	console.log(Scene)
+  scene.add(object);
+	console.log(scene)
 
   return <div style={{ height: 500, width: '100%' }}>
 
