@@ -54,7 +54,7 @@ export default function ThreeJSON(props) {
   // Alternatively, to parse a previously loaded JSON structure
 
   const object = loader.parse(models);
-  scene.add(object);
+  //scene.add(object);
   console.log(scene);
 
 
