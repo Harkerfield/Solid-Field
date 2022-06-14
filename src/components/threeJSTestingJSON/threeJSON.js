@@ -24,10 +24,17 @@ export default function ThreeJSON(props) {
   renderer.setSize( window.innerWidth, window.innerHeight );
   document.body.appendChild( renderer.domElement );
 
-  const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-  const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-  const cube = new THREE.Mesh( geometry, material );
-  scene.add( cube );
+  // const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+  // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+  // const cube = new THREE.Mesh( geometry, material );
+  // scene.add( cube );
+
+
+
+  const cube = loader.parse(models);
+  scene.add(cube);
+  console.log(scene);
+
 
   camera.position.z = 5;
 
@@ -63,9 +70,7 @@ export default function ThreeJSON(props) {
   // );
   // Alternatively, to parse a previously loaded JSON structure
 
-  const object = loader.parse(models);
-  scene.add(object);
-  console.log(scene);
+
 
   return <div style={{ height: 500, width: '100%' }}>
 

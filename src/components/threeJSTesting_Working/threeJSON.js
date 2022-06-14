@@ -4,8 +4,6 @@ import models from './example.json';
 //On Windows by default both Chrome and Firefox use ANGLE based rendering backend.//
 
 export default function ThreeJSON(props) {
-
-  
   let camera, scene, renderer;
   // let plane;
   // let pointer, raycaster, isShiftDown = false;
@@ -15,23 +13,36 @@ export default function ThreeJSON(props) {
 
   const objects = [];
 
-
-
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
 
   renderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  document.body.appendChild( renderer.domElement );
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-  // const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-  // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-  // const cube = new THREE.Mesh( geometry, material );
-  // scene.add( cube );
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
 
+  camera.position.z = 5;
 
+  function animate() {
+    requestAnimationFrame(animate);
 
-  
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
   const loader = new THREE.ObjectLoader();
   // loader.load(
   //   // resource URL
@@ -54,28 +65,8 @@ export default function ThreeJSON(props) {
   // Alternatively, to parse a previously loaded JSON structure
 
   const object = loader.parse(models);
-  //scene.add(object);
+  scene.add(object);
   console.log(scene);
 
-
-
-
-  camera.position.z = 5;
-
-  function animate() {
-    requestAnimationFrame( animate );
-
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-
-    renderer.render( scene, camera );
-  };
-
-  animate();
-
-
-  return <div style={{ height: 500, width: '100%' }}>
-
-
-  </div>;
+  return <div style={{ height: 500, width: '100%' }}></div>;
 }
