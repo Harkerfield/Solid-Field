@@ -1,5 +1,7 @@
 import React from 'react';
 import * as THREE from 'three';
+import { Canvas, useFrame } from 'react-three-fiber';
+
 import models from './cube.json';
 //On Windows by default both Chrome and Firefox use ANGLE based rendering backend.//
 
@@ -23,10 +25,6 @@ export default function ThreeJSON(props) {
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-
-  document.body.appendChild(renderer.domElement);
-
-  console.log('dom element', renderer.domElement);
 
   // const geometry = new THREE.BoxGeometry( 1, 1, 1 );
   // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -70,6 +68,14 @@ export default function ThreeJSON(props) {
   //   }
   // );
   // Alternatively, to parse a previously loaded JSON structure
+
+  //document.body.appendChild(renderer.domElement);
+  const Rendertest = renderer.domElement;
+  // console.log("test", Rendertest);
+  document.body.appendChild(Rendertest);
+
+  // document.getElementById("renderingtest").appendChild(Rendertest);
+  // console.log('dom element', renderer.domElement);
 
   return <div style={{ height: 500, width: '100%' }}></div>;
 }
