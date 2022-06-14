@@ -1,6 +1,6 @@
 import React from 'react';
 import * as THREE from 'three';
-import models from './example.json';
+import models from './cube.json';
 //On Windows by default both Chrome and Firefox use ANGLE based rendering backend.//
 
 export default function ThreeJSON(props) {
