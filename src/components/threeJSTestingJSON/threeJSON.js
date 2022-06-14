@@ -2,6 +2,17 @@ import React from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from 'react-three-fiber';
 
+
+
+
+
+//https://github.com/pmndrs/react-three-fiber/blob/master/example/src/demos/Test.tsx
+
+
+
+
+
+
 import models from './cube.json';
 //On Windows by default both Chrome and Firefox use ANGLE based rendering backend.//
 
