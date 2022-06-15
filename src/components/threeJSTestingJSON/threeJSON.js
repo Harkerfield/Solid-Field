@@ -6,18 +6,20 @@ function Test() {
   const [o1] = useState(
     () => new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ color: 'hotpink' })),
   )
+
   const [o2] = useState(
     () => new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial({ color: 'aquamarine' })),
   )
-  const [which, toggle] = useReducer((state) => !state, true)
-  useEffect(() => {
-    const interval = setInterval(toggle, 1000)
-    return () => clearInterval(interval)
-  }, [])
+  
+  // const [which, toggle] = useReducer((state) => !state, true)
+  // useEffect(() => {
+  //   const interval = setInterval(toggle, 1000)
+  //   return () => clearInterval(interval)
+  // }, [])
 
-  useFrame((state) => {
-    console.log(state.pointer.x)
-  })
+  // useFrame((state) => {
+  //   console.log(state.pointer.x)
+  // })
 
   // return <primitive object={which ? o1 : o2} />
   return <primitive object={o2} />
