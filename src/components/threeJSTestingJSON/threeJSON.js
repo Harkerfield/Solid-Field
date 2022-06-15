@@ -19,7 +19,8 @@ function Test() {
     console.log(state.pointer.x)
   })
 
-  return <primitive object={which ? o1 : o2} />
+  // return <primitive object={which ? o1 : o2} />
+  return <primitive object={o2} />
 }
 
 export default function ThreeJSON() {
