@@ -64,7 +64,11 @@ function Test() {
   );
   scene.add(plane);
 
-  //setobjects(plane);
+  
+  useEffect(() => {
+    setobjects(plane);
+   }, [plane]);
+
 
   const [ambientLight] = useState(() => new THREE.AmbientLight(0x606060));
   scene.add(ambientLight);
@@ -89,28 +93,41 @@ function Test() {
 
       renderer.setSize(window.innerWidth, window.innerHeight);
 
-      render();
+      useEffect(() => {
+        Renderer.render(scene, camera);
+       }, []);
+       
     }
     window.addEventListener('resize', onWindowResize);
   });
 
   useEffect(() => {
-    function onPointerMove() {
-      //console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+    function onPointerMove(event) {
+      pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      raycaster.setFromCamera( pointer, camera );
 
-      renderer.render(scene, camera);
+      const intersects = raycaster.intersectObjects( objects, false );
 
-      render();
+      if ( intersects.length > 0 ) {
+
+        const intersect = intersects[ 0 ];
+
+        rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+        rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+
+        // render();
+        useEffect(() => {
+          Renderer.render(scene, camera);
+         }, []);
+
+      }
     }
     window.addEventListener('pointermove', onPointerMove);
   });
 
   useEffect(() => {
-    function onPointerDown() {
+    function onPointerDown(event) {
       pointer.set(
         (event.clientX / window.innerWidth) * 2 - 1,
         -(event.clientY / window.innerHeight) * 2 + 1
@@ -145,7 +162,10 @@ function Test() {
 
           objects.push(voxel);
         }
-        render();
+        // render();
+        useEffect(() => {
+          Renderer.render(scene, camera);
+         }, []);
       }
     }
     window.addEventListener('pointerdown', onPointerDown);
@@ -188,9 +208,9 @@ function Test() {
   return <primitive object={scene} />;
 }
 
-function render() {
-  Renderer.render(scene, camera);
-}
+// function render() {
+//   Renderer.render(scene, camera);
+// }
 //render();
 
 export default function ThreeJSON() {
