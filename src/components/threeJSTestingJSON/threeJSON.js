@@ -84,6 +84,11 @@ function Test() {
   );
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
+  
+  
+  //document.body.appendChild( renderer.domElement );
+
+
 
   useEffect(() => {
     function onWindowResize() {
@@ -93,9 +98,8 @@ function Test() {
 
       renderer.setSize(window.innerWidth, window.innerHeight);
 
-      useEffect(() => {
         Renderer.render(scene, camera);
-       }, []);
+   
        
     }
     window.addEventListener('resize', onWindowResize);
@@ -117,9 +121,8 @@ function Test() {
         rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 
         // render();
-        useEffect(() => {
           Renderer.render(scene, camera);
-         }, []);
+
 
       }
     }
