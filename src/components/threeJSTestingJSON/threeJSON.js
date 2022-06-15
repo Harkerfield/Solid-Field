@@ -81,75 +81,77 @@ function Test() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-
-
-
-  React.useEffect(() => {
+  useEffect(() => {
     function onWindowResize() {
-      //console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
+      console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
 
       renderer.setSize(window.innerWidth, window.innerHeight);
+
+      render();
     }
     window.addEventListener('resize', onWindowResize);
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     function onPointerMove() {
       //console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
 
       renderer.setSize(window.innerWidth, window.innerHeight);
+
+      renderer.render(scene, camera);
+
+      render();
     }
     window.addEventListener('pointermove', onPointerMove);
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     function onPointerDown() {
-      pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+      pointer.set(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1
+      );
 
-      raycaster.setFromCamera( pointer, camera );
+      raycaster.setFromCamera(pointer, camera);
 
-      const intersects = raycaster.intersectObjects( objects, false );
+      const intersects = raycaster.intersectObjects(objects, false);
 
-      if ( intersects.length > 0 ) {
-
-        const intersect = intersects[ 0 ];
+      if (intersects.length > 0) {
+        const intersect = intersects[0];
 
         // delete cube
 
-        if ( isShiftDown ) {
+        if (isShiftDown) {
+          if (intersect.object !== plane) {
+            scene.remove(intersect.object);
 
-          if ( intersect.object !== plane ) {
-
-            scene.remove( intersect.object );
-
-            objects.splice( objects.indexOf( intersect.object ), 1 );
-
+            objects.splice(objects.indexOf(intersect.object), 1);
           }
 
           // create cube
-
         } else {
+          const voxel = new THREE.Mesh(cubeGeo, cubeMaterial);
+          voxel.position.copy(intersect.point).add(intersect.face.normal);
+          voxel.position
+            .divideScalar(50)
+            .floor()
+            .multiplyScalar(50)
+            .addScalar(25);
+          scene.add(voxel);
 
-          const voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
-          voxel.position.copy( intersect.point ).add( intersect.face.normal );
-          voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-          scene.add( voxel );
-
-          objects.push( voxel );
-
+          objects.push(voxel);
         }
-
+        render();
       }
     }
     window.addEventListener('pointerdown', onPointerDown);
   });
 
-  
-  React.useEffect(() => {
+  useEffect(() => {
     function onPointerDown() {
       //console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -160,55 +162,36 @@ function Test() {
     window.addEventListener('pointerdown', onPointerDown);
   });
 
-
-  React.useEffect(() => {
-    function onDocumentKeyDown() {
-
-      switch ( event.keyCode ) {
-
-        case 16: isShiftDown = true; break;
-
+  useEffect(() => {
+    function onDocumentKeyDown(event) {
+      switch (event.keyCode) {
+        case 16:
+          isShiftDown = true;
+          break;
       }
     }
     window.addEventListener('keydown', onDocumentKeyDown);
   });
 
-
-  React.useEffect(() => {
-    function onDocumentKeyUp() {
-      switch ( event.keyCode ) {
-
-        case 16: isShiftDown = false; break;
-
+  useEffect(() => {
+    function onDocumentKeyUp(event) {
+      switch (event.keyCode) {
+        case 16:
+          isShiftDown = false;
+          break;
       }
     }
     window.addEventListener('keyup', onDocumentKeyUp);
   });
 
-
-  
-  React.useEffect(() => {
-    function render() {
-      renderer.render( scene, camera );
-    }
-    
-  });
-
-  // const [which, toggle] = useReducer((state) => !state, true)
-  // useEffect(() => {
-  //   const interval = setInterval(toggle, 1000)
-  //   return () => clearInterval(interval)
-  // }, [])
-
-  // useFrame((state) => {
-  //   console.log(state.pointer.x)
-  // })
-
-  // return <primitive object={which ? o1 : o2} />
-
   console.log('scene', scene);
   return <primitive object={scene} />;
 }
+
+function render() {
+  Renderer.render(scene, camera);
+}
+//render();
 
 export default function ThreeJSON() {
   return (
