@@ -23,7 +23,7 @@ function Test() {
   return <primitive object={which ? o1 : o2} />
 }
 
-export default function App() {
+export default function ThreeJSON() {
   return (
     <Canvas>
       <Test />
