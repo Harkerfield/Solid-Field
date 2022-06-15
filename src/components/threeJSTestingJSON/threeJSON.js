@@ -1,3 +1,5 @@
+//https://github.com/pmndrs/react-three-fiber/blob/master/example/src/demos/Viewcube.tsx
+
 import * as THREE from 'three'
 import React, { useRef, useLayoutEffect, useState } from 'react'
 import { Canvas, useFrame, useThree, createPortal } from '@react-three/fiber'
@@ -17,7 +19,7 @@ function Viewcube() {
     camera.updateProjectionMatrix()
   }, [size])
 
-  const ref = useRef<THREE.Mesh>(null!)
+  const ref = useRef<THREE.Mesh>(!null)
   const [hover, set] = useState<number | null>(null)
   const matrix = new THREE.Matrix4()
 
@@ -32,7 +34,7 @@ function Viewcube() {
   }, 1)
 
   return (
-    <>
+    <div>
       {createPortal(
         <group>
           <mesh
@@ -55,7 +57,7 @@ function Viewcube() {
         scene,
         { camera, events: { priority: events.priority + 1 } },
       )}
-    </>
+    </div>
   )
 }
 
