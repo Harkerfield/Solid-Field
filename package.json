@@ -36,6 +36,5 @@
   },
   "devDependencies": {
     "react-scripts": "latest"
-  },
-  "engines": { "node": "16.x" }
+  }
 }
