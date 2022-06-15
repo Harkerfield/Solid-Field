@@ -64,11 +64,9 @@ function Test() {
   );
   scene.add(plane);
 
-  
   useEffect(() => {
     setobjects(plane);
-   }, [plane]);
-
+  }, [plane]);
 
   const [ambientLight] = useState(() => new THREE.AmbientLight(0x606060));
   scene.add(ambientLight);
@@ -84,11 +82,8 @@ function Test() {
   );
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  
-  
+
   //document.body.appendChild( renderer.domElement );
-
-
 
   useEffect(() => {
     function onWindowResize() {
@@ -98,32 +93,34 @@ function Test() {
 
       renderer.setSize(window.innerWidth, window.innerHeight);
 
-        Renderer.render(scene, camera);
-   
-       
+      Renderer.render(scene, camera);
     }
     window.addEventListener('resize', onWindowResize);
   });
 
   useEffect(() => {
     function onPointerMove(event) {
-      pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+      pointer.set(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1
+      );
 
-      raycaster.setFromCamera( pointer, camera );
+      raycaster.setFromCamera(pointer, camera);
 
-      const intersects = raycaster.intersectObjects( objects, false );
+      const intersects = raycaster.intersectObjects(objects, false);
 
-      if ( intersects.length > 0 ) {
+      if (intersects.length > 0) {
+        const intersect = intersects[0];
 
-        const intersect = intersects[ 0 ];
-
-        rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
-        rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+        rollOverMesh.position.copy(intersect.point).add(intersect.face.normal);
+        rollOverMesh.position
+          .divideScalar(50)
+          .floor()
+          .multiplyScalar(50)
+          .addScalar(25);
 
         // render();
-          Renderer.render(scene, camera);
-
-
+        Renderer.render(scene, camera);
       }
     }
     window.addEventListener('pointermove', onPointerMove);
@@ -168,7 +165,7 @@ function Test() {
         // render();
         useEffect(() => {
           Renderer.render(scene, camera);
-         }, []);
+        }, []);
       }
     }
     window.addEventListener('pointerdown', onPointerDown);
