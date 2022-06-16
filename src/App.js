@@ -38,8 +38,8 @@ import Buildings from './buildings/Buildings.js';
 
 import DiagramApp from './components/diagrams/App.js';
 
-//import ThreeJSON from './components/reactthreeleaf/ReactThreeLeafTesting.js';
-import ThreeJSON from './components/threeJSTestingJSON/threeJSON.js';
+import ThreeJSON from './components/reactthreeleaf/ReactThreeLeafTesting.js';
+//import ThreeJSON from './components/threeJSTestingJSON/threeJSON.js';
 
 // import Scheduler from './scheduler/Scheduler.js';
 // import Checker from './checker/Checker.js';
