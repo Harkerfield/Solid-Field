@@ -1,52 +1,34 @@
-import { useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import {
-  Selection,
-  Select,
-  EffectComposer,
-  Outline,
-} from '@react-three/postprocessing';
+import React, { useRef, useState } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
 
 function Box(props) {
-  const ref = useRef();
-  const [hovered, hover] = useState(null);
-  console.log(hovered);
-  useFrame(
-    (state, delta) => (ref.current.rotation.x = ref.current.rotation.y += delta)
-  );
+  const mesh = useRef(null)
+  const [hovered, setHover] = useState(false)
+  const [active, setActive] = useState(false)
+  useFrame((state, delta) => (mesh.current.rotation.x += 0.01))
   return (
-    <Select enabled={hovered}>
-      <mesh
-        ref={ref}
-        {...props}
-        onPointerOver={() => hover(true)}
-        onPointerOut={() => hover(false)}
-      >
-        <boxGeometry />
-        <meshStandardMaterial color="orange" />
-      </mesh>
-    </Select>
-  );
+    <mesh
+      {...props}
+      ref={mesh}
+      scale={active ? 1.5 : 1}
+      onClick={(event) => setActive(!active)}
+      onPointerOver={(event) => setHover(true)}
+      onPointerOut={(event) => setHover(false)}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+    </mesh>
+  )
 }
 
-export default function ThreeJSON() {
+export default function App() {
   return (
-    <Canvas dpr={[1, 2]}>
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-      <pointLight position={[-10, -10, -10]} />
-      <Selection>
-        <EffectComposer multisampling={8} autoClear={false}>
-          <Outline
-            blur
-            visibleEdgeColor="white"
-            edgeStrength={100}
-            width={500}
-          />
-        </EffectComposer>
-        <Box position={[-1, 0, 0]} />
-        <Box position={[1, 0, 0]} />
-      </Selection>
+    <div>
+    <Canvas>
+      <ambientLight />
+      <pointLight position={[10, 10, 10]} />
+      <Box position={[-1.2, 0, 0]} />
+      <Box position={[1.2, 0, 0]} />
     </Canvas>
-  );
+    </div>
+  )
 }
