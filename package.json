@@ -2,6 +2,9 @@
   "name": "react",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "@babel/core": "7.18.5",
     "@emotion/react": "11.9.3",
@@ -37,8 +40,5 @@
   },
   "devDependencies": {
     "react-scripts": "latest"
-  },
-  "engines": {
-    "node": "14.x"
   }
 }
