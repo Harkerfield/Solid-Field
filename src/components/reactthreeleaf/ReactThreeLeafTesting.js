@@ -2,28 +2,6 @@ import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Stats, OrbitControls, CameraShake } from "@react-three/drei";
 
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
-
-
-
-function WobbleCamera() {
-  const shakeRef = useRef();
-  const orbitRef = useRef();
-  useEffect(() => {
-    orbitRef.current.addEventListener("change", () => {
-      const shake = shakeRef.current.getIntensity();
-      shakeRef.current.setIntensity(shake + 0.015);
-    });
-  }, [orbitRef]);
-
-  return (
-    <>
-      <OrbitControls ref={orbitRef} />
-      <CameraShake ref={shakeRef} additive decay />
-    </>
-  );
-}
-
 
 function Box(props) {
   const mesh = useRef(null)
