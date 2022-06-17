@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Stats, OrbitControls, CameraShake } from '@react-three/drei';
 
 function Box(props) {
@@ -16,7 +16,7 @@ function Box(props) {
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}
     >
-      <boxGeometry args={[1.5, 1.5, 1.5]} />
+      <boxGeometry args={[50, 50, 50]} />
       <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
     </mesh>
   );
@@ -25,8 +25,17 @@ function Box(props) {
 export default function App() {
   return (
     <div>
-      <Canvas>
+      {/* <Canvas onCreated={(state) => state.gl.setClearColor('blue')}> */}
+      <Canvas camera={{ fov: 75, position: [-10, 45, 20] }}>
+        <camera rotation={[500, 800, 1300]} />
+        <raycaster />
+        <vector2 />
+        <gridHelper args={[1000, 20]} />
+        <color attach="background" args={['red']} />
         <ambientLight />
+        {/* 
+        <directionalLight position={[10, 10, 10]} /> */}
+        {/* <planeGeometry rotate="{ - Math.PI / 2}" /> */}
         <pointLight position={[10, 10, 10]} />
         <Box position={[-1.2, 0, 0]} />
         <Box position={[1.2, 0, 0]} />
