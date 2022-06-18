@@ -1,6 +1,25 @@
+import * as THREE from 'three';
 import React, { useRef, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import {
+  Canvas,
+  useFrame,
+  useThree,
+  extend,
+  useFrame,
+} from '@react-three/fiber';
 import { Stats, OrbitControls, CameraShake } from '@react-three/drei';
+import CameraControls from 'camera-controls';
+
+CameraControls.install({ THREE });
+extend({ CameraControls });
+
+function Controls() {
+  const ref = useRef();
+  const camera = useThree((state) => state.camera);
+  const gl = useThree((state) => state.gl);
+  useFrame((state, delta) => ref.current.update(delta));
+  return <cameraControls ref={ref} args={[camera, gl.domElement]} />;
+}
 
 function Box(props) {
   const mesh = useRef(null);
@@ -16,7 +35,7 @@ function Box(props) {
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}
     >
-      <boxGeometry args={[50,50,50]} />
+      <boxGeometry args={[50, 50, 50]} />
       <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
     </mesh>
   );
@@ -26,7 +45,7 @@ export default function App() {
   return (
     <div>
       {/* <Canvas onCreated={(state) => state.gl.setClearColor('blue')}> */}
-      <Canvas camera={{position: [100, 300, 500] }}>
+      <Canvas camera={{ position: [100, 300, 500] }}>
         <camera rotation={[500, 800, 1300]} />
         <raycaster />
         <vector2 />
@@ -39,6 +58,7 @@ export default function App() {
         <pointLight position={[10, 10, 10]} />
         <Box position={[0, 0, 0]} />
         <Box position={[50, 0, 0]} />
+        <Controls />
       </Canvas>
     </div>
   );
