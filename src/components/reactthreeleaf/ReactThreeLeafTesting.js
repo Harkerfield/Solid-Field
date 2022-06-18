@@ -7,7 +7,6 @@ import {
   extend,
   useFrame,
 } from '@react-three/fiber';
-import { Stats, OrbitControls, CameraShake } from '@react-three/drei';
 import CameraControls from 'camera-controls';
 
 CameraControls.install({ THREE });
