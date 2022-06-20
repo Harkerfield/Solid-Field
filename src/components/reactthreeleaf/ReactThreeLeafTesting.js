@@ -66,8 +66,8 @@ export default function App() {
           <color attach="background" args={['white']} />
           <gridHelper args={[1000, 20]} />
           <ambientLight intensity={0.3} />
-          {/* <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
-          <planeGeometry visible={false} /> */}
+          {/* <pointLight castShadow intensity={1} position={[0,200,100]} /> */}
+          <planeGeometry visible={false} />
 
           {/* 
         <Box position={[25, 25, 25]} /> */}
