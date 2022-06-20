@@ -3,7 +3,6 @@ import { useCallback, useState } from 'react';
 // import { useTexture } from "@react-three/drei"
 import { useBox } from '@react-three/cannon';
 import create from 'zustand';
-import dirt from './assets/dirt.jpg';
 
 // This is a super naive implementation and wouldn't allow for more than a few thousand boxes.
 // In order to make this scale this has to be one instanced mesh, then it could easily be
@@ -11,12 +10,14 @@ import dirt from './assets/dirt.jpg';
 
 const useCubeStore = create((set) => ({
   cubes: [],
+
   addCube: (x, y, z) =>
     set((state) => ({ cubes: [...state.cubes, [x, y, z]] })),
 }));
 
 export const Cubes = () => {
   const cubes = useCubeStore((state) => state.cubes);
+  console.log(cubes);
   return cubes.map((coords, index) => <Cube key={index} position={coords} />);
 };
 
@@ -25,6 +26,7 @@ export const Cube = (props) => {
   const [hover, set] = useState(null);
   const addCube = useCubeStore((state) => state.addCube);
   // const texture = useTexture(dirt)
+
   const onMove = useCallback(
     (e) => (e.stopPropagation(), set(Math.floor(e.faceIndex / 2))),
     []
@@ -34,12 +36,12 @@ export const Cube = (props) => {
     e.stopPropagation();
     const { x, y, z } = ref.current.position;
     const dir = [
-      [x + 1, y, z],
-      [x - 1, y, z],
-      [x, y + 1, z],
-      [x, y - 1, z],
-      [x, y, z + 1],
-      [x, y, z - 1],
+      [x + 50, y, z],
+      [x - 50, y, z],
+      [x, y + 50, z],
+      [x, y - 50, z],
+      [x, y, z + 50],
+      [x, y, z - 50],
     ];
     addCube(...dir[Math.floor(e.faceIndex / 2)]);
   }, []);
@@ -60,7 +62,7 @@ export const Cube = (props) => {
           color={hover === index ? 'hotpink' : 'white'}
         />
       ))}
-      <boxGeometry />
+      <boxGeometry args={[50, 50, 50]} />
     </mesh>
   );
 };
