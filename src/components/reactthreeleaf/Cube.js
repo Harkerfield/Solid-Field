@@ -33,6 +33,7 @@ export const Cube = (props) => {
   );
   const onOut = useCallback(() => set(null), []);
   const onClick = useCallback((e) => {
+    
     e.stopPropagation();
     const { x, y, z } = ref.current.position;
     const dir = [
