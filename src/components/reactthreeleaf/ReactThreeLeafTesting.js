@@ -59,20 +59,23 @@ export default function App() {
   return (
     <div>
       {/* <Canvas onCreated={(state) => state.gl.setClearColor('blue')}> */}
-      <Canvas camera={{ position: [100, 300, 500] }}>
-        <Physics gravity={[0, -5, 0]}>
+      <Canvas camera={{ position: [1, 30, 5] }}>
+        {/* <Physics gravity={[0, 0, 0]}> */}
+        <Physics>
           <Ground />
 
           <color attach="background" args={['white']} />
-          <gridHelper args={[1000, 20]} />
-          <ambientLight intensity={0.3} />
+          <gridHelper args={[250, 25]} />
+          {/* <ambientLight intensity={0.3} /> */}
+        <ambientLight intensity={0.3} />
+
           {/* <pointLight castShadow intensity={1} position={[0,200,100]} /> */}
-          <planeGeometry visible={false} />
+          {/* <planeGeometry visible={false} /> */}
 
           {/* 
         <Box position={[25, 25, 25]} /> */}
 
-          <Cube position={[25, 25, 25]} />
+          <Cube position={[0, 5, 0]} />
           <Cubes />
         </Physics>
 {/* 

@@ -36,12 +36,12 @@ export const Cube = (props) => {
     e.stopPropagation();
     const { x, y, z } = ref.current.position;
     const dir = [
-      [x + 50, y, z],
-      [x - 50, y, z],
-      [x, y + 50, z],
-      [x, y - 50, z],
-      [x, y, z + 50],
-      [x, y, z - 50],
+      [x + 10, y, z],
+      [x - 10, y, z],
+      [x, y + 10, z],
+      [x, y - 10, z],
+      [x, y, z + 10],
+      [x, y, z - 10],
     ];
     addCube(...dir[Math.floor(e.faceIndex / 2)]);
   }, []);
@@ -62,7 +62,7 @@ export const Cube = (props) => {
           color={hover === index ? 'hotpink' : 'white'}
         />
       ))}
-      <boxGeometry args={[50, 50, 50]} />
+      <boxGeometry args={[10, 10, 10]} />
     </mesh>
   );
 };
